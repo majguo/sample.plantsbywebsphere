@@ -28,3 +28,10 @@
 - Surface reachability evidence must be direct for each contract class; an entry-page probe cannot
   stand in for REST, streaming, or alternate-surface parity.
 - Learnings consumed: [teamlead/mixed-surface-validation-stack, teamlead/spring-boot-3-rewrite-baseline]
+
+## [t7] Created the implementation plan and task breakdown
+- The missing `context.md` file did not block planning because the required execution inputs were already present in the constitution, clarification artifact, `t3`, `t4`, `t5`, `t6`, and `t4.1`.
+- No project topology artifact was present, so the plan used capability workstreams rather than G-group labels while still keeping each task independently executable.
+- The decomposition rule that mattered most was to keep foundational platform and seam work separate from parity slices, then split the rewrite by user-visible capability rather than entity/service/controller layers.
+- Readiness evidence stayed isolated to explicit validation tasks so implementation slices do not over-claim journey readiness from startup-only proof.
+- Learnings consumed: [teamlead/mixed-surface-validation-stack, teamlead/readiness-evidence-policy, teamlead/spring-boot-3-rewrite-baseline, architect/explicit-runtime-contracts-for-boot-target, architect/spring-boot-war-and-jsf-compat-layer]
