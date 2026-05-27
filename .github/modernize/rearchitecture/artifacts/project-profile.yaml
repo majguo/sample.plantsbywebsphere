@@ -1,0 +1,49 @@
+project:
+  scope_path: "."
+  loc: 16975
+  languages: [java]
+  git: true
+  structure:
+    pom.xml: "Single-module Maven WAR build targeting Java EE 8 on Open Liberty"
+    src/main/java: "Core trading domain, JAX-RS resources, servlets, JSF backing beans, CDI, EJB-style services, and websocket endpoints"
+    src/main/webapp: "Mixed JSP, JSF Facelets, static HTML, CSS, and websocket client pages"
+    src/main/liberty/config: "Open Liberty server configuration and environment properties"
+    resources/data: "Bundled database resources and seed data"
+    scripts: "Container and runtime switching scripts for Liberty/Payara/WildFly flows"
+  notes: "DayTrader8 sample application packaged as a WAR with Java EE 8 APIs, Liberty runtime config, and mixed legacy web technologies."
+
+assessment:
+  change_type: rewrite
+  rationale: |
+    The project is a brownfield migration from a Java EE 8/Open Liberty WAR to Spring Boot 3.x.
+    It depends on javax-based APIs, container-managed behavior, Liberty configuration, JSF pages,
+    JSP pages, CDI injection, JAX-RS resources, and websocket endpoints. Spring Boot 3 requires
+    Jakarta namespaces and different runtime integration, so this is a cross-stack rewrite rather
+    than an in-place framework upgrade.
+  transformations:
+    - fromStack: "Open Liberty + Java EE"
+      fromStackVersion: "Java EE 8 / Java 8"
+      toStack: "Spring Boot"
+      toStackVersion: "3.x"
+  grouping_needed: false
+  deep_planning: true
+
+progress_sync:
+  run_id: "429ecde6-5f94-41ab-81a5-237a2d9d5800"
+  grouping_mode: "none"
+  execution_mode: "saved"
+  plan_start_time: "2026-05-27T06:29:51Z"
+  plan_completed_time: ""
+  execution_start_time: ""
+  execution_completed_time: ""
+  validation_start_time: ""
+  validation_completed_time: ""
+  total_phases: 5
+  completed_phases: 1
+  total_modules: 1
+  completed_modules: 0
+  total_tasks: 8
+  completed_tasks: 1
+  total_commits: 37
+  build_verified: false
+  test_verified: false
