@@ -15,3 +15,12 @@ plan_items:
   "7.2": ["T014"]
   "8.1": ["T015"]
   "8.2": ["T016"]
+
+validation:
+  passed: true
+  plan_items_total: 16
+  plan_items_covered: 16
+  coverage_percentage: "100%"
+  errors: []
+  warnings:
+    - "artifacts/t7-teamlead.md summary paragraph states 14 plan items while the detailed plan and coverage summary state 16"

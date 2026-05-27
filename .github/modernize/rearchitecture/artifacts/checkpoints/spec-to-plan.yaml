@@ -29,3 +29,10 @@ requirements:
   REQ-028: ["1.2", "7.1", "7.2", "8.2"]
   REQ-029: ["2.1", "3.1", "3.2", "4.1", "5.1", "6.1", "7.1", "7.2", "8.2"]
   REQ-030: ["2.1", "3.1", "7.1", "8.2"]
+
+validation:
+  passed: true
+  total_requirements: 30
+  covered_requirements: 30
+  coverage_percentage: "100%"
+  missing_requirements: []

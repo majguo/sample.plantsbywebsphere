@@ -13,7 +13,7 @@ DayTrader8 will be migrated as a Spring Boot 3 rewrite in 8 execution phases, 14
 ## Coverage Summary
 
 - Requirements mapped: 30
-- Plan items: 14
+- Plan items: 16
 - Tasks generated: 16
 - Unresolved clarification items: 0
 

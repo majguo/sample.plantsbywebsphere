@@ -35,3 +35,22 @@
 - The decomposition rule that mattered most was to keep foundational platform and seam work separate from parity slices, then split the rewrite by user-visible capability rather than entity/service/controller layers.
 - Readiness evidence stayed isolated to explicit validation tasks so implementation slices do not over-claim journey readiness from startup-only proof.
 - Learnings consumed: [teamlead/mixed-surface-validation-stack, teamlead/readiness-evidence-policy, teamlead/spring-boot-3-rewrite-baseline, architect/explicit-runtime-contracts-for-boot-target, architect/spring-boot-war-and-jsf-compat-layer]
+
+## [t8] Ran the implementation-plan quality gate
+- Spec-to-plan coverage passed at 30 of 30 requirements; the gate failure came from task-breakdown quality, not missing REQ coverage.
+- Constitution Delivery Workflow requirements must be enforced at the inline-task level: phase-level REQ references are not enough when tasks need to be independently executable and auditable.
+- Validation-harness work in a brownfield rewrite still needs source anchors so tester-facing tasks stay tied to the existing parity surfaces and approved strategy.
+- Gate summaries must be cross-checked against the detailed plan because a stale headline count is easy to miss and weakens deterministic review.
+- Learnings consumed: [teamlead/capability-workstreams-for-daytrader-plan, teamlead/mixed-surface-validation-stack, teamlead/readiness-evidence-policy, teamlead/spring-boot-3-rewrite-baseline, architect/explicit-runtime-contracts-for-boot-target, architect/spring-boot-war-and-jsf-compat-layer]
+
+## [t8.1] Repaired implementation-plan traceability metadata and source anchors
+- The controlling defect was local to the `t7` package: inline tasks lacked constitution-mandated REQ, evidence, and fallback metadata even though plan coverage itself was complete.
+- Validation-harness work also needs rewrite-mode anchors to both the legacy parity surfaces and the approved testing-strategy artifacts; otherwise tester-facing execution stays under-specified.
+- Summary and checkpoint metadata must be reissued alongside plan repairs so downstream re-gates do not consume stale counts or stale failure state.
+- Learnings consumed: [teamlead/capability-workstreams-for-daytrader-plan, teamlead/mixed-surface-validation-stack, teamlead/readiness-evidence-policy, teamlead/spring-boot-3-rewrite-baseline, teamlead/task-level-traceability-for-plan-gates, architect/explicit-runtime-contracts-for-boot-target, architect/spring-boot-war-and-jsf-compat-layer]
+
+## [t8] Re-ran the implementation-plan quality gate after the t8.1 repair
+- The repaired `t7-teamlead-plan.md` package now satisfies the blocking plan-to-task rules: every plan item is covered, every inline task has `Plan/REQ/Evidence/Fallback`, and the validation-harness tasks now carry rewrite-mode source anchors.
+- The remaining defect is narrower than the original gate failure: `t7-teamlead.md` still has one stale summary sentence claiming 14 plan items even though the coverage section, detailed plan, and checkpoint all report 16.
+- That package-summary drift is worth recording as a MEDIUM warning because it weakens quick auditability, but it does not break traceability or change the blocking PASS/FAIL decision.
+- Learnings consumed: [teamlead/capability-workstreams-for-daytrader-plan, teamlead/mixed-surface-validation-stack, teamlead/readiness-evidence-policy, teamlead/spring-boot-3-rewrite-baseline, teamlead/task-level-traceability-for-plan-gates, architect/explicit-runtime-contracts-for-boot-target, architect/spring-boot-war-and-jsf-compat-layer]
