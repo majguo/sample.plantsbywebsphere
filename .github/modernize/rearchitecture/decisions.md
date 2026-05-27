@@ -17,3 +17,8 @@
 
 **Decision**: Preserve the DayTrader runtime contracts explicitly in downstream design.
 **Rationale**: Architecture, persistence, and testing must center on the `TradeServices` seam, auth/session behavior, order-mode semantics, event fan-out, transaction model, and one Boot-owned configuration surface.
+
+## [TEAMLEAD] [t4.1] - 2026-05-27
+
+**Decision**: Govern readiness evidence as staged binary states.
+**Rationale**: Downstream work must distinguish build, startup, surface, journey, and release readiness; missing evidence is a FAIL and startup proof cannot substitute for parity proof.

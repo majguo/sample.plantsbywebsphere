@@ -36,3 +36,20 @@
   so startup remains time-window sensitive rather than disproven.
 - Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
   architect/trade-services-migration-seam]
+
+## [t4] Spring Boot 3 target architecture fixed around compatibility-owned seams
+- The Boot target is now explicit: executable WAR packaging, one `TradeServices`-compatible
+  application facade, MVC compatibility controllers for `/app`, `/config`, and `/scenario`, a
+  dedicated JSF compatibility slice, one canonical JPA transaction model, a durable DB-backed
+  async order-work queue, and one streaming hub for SSE/WebSocket fan-out.
+- The design deliberately preserves session markers `uidBean` and `sessionCreationDate`, the
+  existing `/daytrader` context root, current operator-visible runtime toggles, and direct
+  reachability of JSP/XHTML/primitive surfaces.
+- External references confirmed two non-obvious constraints worth carrying forward: Spring Boot
+  servlet apps need WAR packaging for reliable `src/main/webapp` + JSP support, and JSF parity on
+  Boot requires an explicit compatibility integration rather than hoping MVC can absorb XHTML pages.
+- Fresh smoke validation: `pwsh -File scripts/smoke-clean-build.ps1` passed; `mvn -B liberty:run
+  -DskipTests` again remained in feature installation long enough that the in-task probe to
+  `http://localhost:9080/daytrader` still saw connection refused.
+- Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
+  architect/trade-services-migration-seam]
