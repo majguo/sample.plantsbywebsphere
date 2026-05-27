@@ -1,0 +1,3 @@
+## 2026-05-27T07:11:52Z [architect] t2.1
+
+INFO: t2.1 fixes the Spring Boot 3 target around explicit runtime contracts. Downstream design must preserve one TradeServices-centered application-service seam, one auth/session boundary, explicit Sync/Async/Async_2-Phase order semantics, one canonical event fan-out path for SSE/WebSocket updates, one transactional write model beneath the seam, and one authoritative Boot configuration model.# DevOps Inbox
