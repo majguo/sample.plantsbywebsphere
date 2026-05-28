@@ -23,9 +23,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
@@ -90,14 +90,14 @@ public class AccountProfileDataBean implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "\n\tAccount Profile Data for userID:" + getUserID() + "\n\t\t   passwd:" + getPassword() + "\n\t\t   fullName:" + getFullName()
-                + "\n\t\t    address:" + getAddress() + "\n\t\t      email:" + getEmail() + "\n\t\t creditCard:" + getCreditCard();
+        return "\n\tAccount Profile Data for userID:" + getUserID() + "\n\t\t   passwd:[PROTECTED]\n\t\t   fullName:" + getFullName()
+            + "\n\t\t    address:" + getAddress() + "\n\t\t      email:" + getEmail() + "\n\t\t creditCard:" + getMaskedCreditCard();
     }
 
     public String toHTML() {
-        return "<BR>Account Profile Data for userID: <B>" + getUserID() + "</B>" + "<LI>   passwd:" + getPassword() + "</LI>" + "<LI>   fullName:"
-                + getFullName() + "</LI>" + "<LI>    address:" + getAddress() + "</LI>" + "<LI>      email:" + getEmail() + "</LI>" + "<LI> creditCard:"
-                + getCreditCard() + "</LI>";
+        return "<BR>Account Profile Data for userID: <B>" + getUserID() + "</B>" + "<LI>   passwd:[PROTECTED]</LI>" + "<LI>   fullName:"
+            + getFullName() + "</LI>" + "<LI>    address:" + getAddress() + "</LI>" + "<LI>      email:" + getEmail() + "</LI>" + "<LI> creditCard:"
+            + getMaskedCreditCard() + "</LI>";
     }
 
     public void print() {
@@ -146,6 +146,17 @@ public class AccountProfileDataBean implements java.io.Serializable {
 
     public String getCreditCard() {
         return creditCard;
+    }
+
+    public String getMaskedCreditCard() {
+        if (creditCard == null || creditCard.isBlank()) {
+            return "";
+        }
+        String digits = creditCard.replaceAll("\\s+", "");
+        if (digits.length() <= 4) {
+            return "****";
+        }
+        return "****-****-****-" + digits.substring(digits.length() - 4);
     }
 
     public void setCreditCard(String creditCard) {

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -23,26 +24,63 @@ import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
 @ExtendWith(MockitoExtension.class)
 class TradeConfigControllerTest {
 
+    private static final String OPERATOR_USER_ID = "uid:0";
+
     @Mock
     private RuntimeSettingsService runtimeSettings;
 
     @Mock
     private TradeDirectDBUtils dbUtils;
 
+    private final CompatibilitySessionFacade sessionFacade = new CompatibilitySessionFacade();
+
     private MockMvc mockMvc() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/");
         viewResolver.setSuffix(".jsp");
         return MockMvcBuilders.standaloneSetup(new TradeConfigController(runtimeSettings, dbUtils))
+                .addInterceptors(new CompatibilitySessionAccessInterceptor(sessionFacade, SessionAccessRequirement.OPERATOR))
                 .setViewResolvers(viewResolver)
                 .build();
     }
 
+    private MockHttpSession operatorSession() {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", OPERATOR_USER_ID);
+        return session;
+    }
+
+    private MockHttpSession authenticatedSession() {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("uidBean", "uid:1");
+        return session;
+    }
+
     @Test
-    void showsCurrentConfigurationWhenNoActionIsProvided() throws Exception {
+    void rejectsAnonymousConfigAccess() throws Exception {
         MockMvc mockMvc = mockMvc();
 
         mockMvc.perform(get("/config"))
+                .andExpect(status().isUnauthorized());
+
+        verifyNoInteractions(runtimeSettings, dbUtils);
+    }
+
+    @Test
+    void rejectsNonOperatorConfigAccess() throws Exception {
+        MockMvc mockMvc = mockMvc();
+
+        mockMvc.perform(get("/config").session(authenticatedSession()))
+                .andExpect(status().isForbidden());
+
+        verifyNoInteractions(runtimeSettings, dbUtils);
+    }
+
+    @Test
+    void showsCurrentConfigurationForTheOperatorSession() throws Exception {
+        MockMvc mockMvc = mockMvc();
+
+        mockMvc.perform(get("/config").session(operatorSession()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("config"))
                 .andExpect(model().attributeExists("tradeConfig"))
@@ -56,6 +94,7 @@ class TradeConfigControllerTest {
         MockMvc mockMvc = mockMvc();
 
         mockMvc.perform(post("/config")
+                        .session(operatorSession())
                         .param("action", "updateConfig")
                         .param("OrderProcessingMode", "1")
                         .param("WebInterface", "2")
@@ -87,7 +126,7 @@ class TradeConfigControllerTest {
         MockMvc mockMvc = mockMvc();
         when(runtimeSettings.getMaxUsers()).thenReturn(15000);
 
-        mockMvc.perform(post("/config").param("action", "buildDB"))
+        mockMvc.perform(post("/config").session(operatorSession()).param("action", "buildDB"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("config"))
                 .andExpect(model().attribute("status", "DayTrader Database Built - 15000users createdCurrent DayTrader Configuration:"));

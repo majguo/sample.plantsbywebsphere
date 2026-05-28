@@ -47,8 +47,7 @@ public class Log {
   }
 
   public static void error(String message, Throwable e) {
-    error(message + "\n\t" + e.toString());
-    e.printStackTrace(System.out);
+    log.log(Level.SEVERE, "Error: " + message, e);
   }
 
   public static void error(String msg1, String msg2, Throwable e) {
@@ -61,7 +60,6 @@ public class Log {
 
   public static void error(Throwable e, String message) {
     error(message + "\n\t", e);
-    e.printStackTrace(System.out);
   }
 
   public static void error(Throwable e, String msg1, String msg2) {

@@ -29,7 +29,7 @@ public class TradeAppJsfBridge extends JsfFacesSupport implements Serializable {
     private String userID = "uid:0";
 
     @NotBlank
-    private String password = "xxx";
+    private String password = "";
 
     @NotBlank
     private String cpassword;
@@ -64,10 +64,11 @@ public class TradeAppJsfBridge extends JsfFacesSupport implements Serializable {
                 sessionFacade.establishSession(request(), userID);
                 setResults("Ready to Trade");
                 setAddress(accountProfileData.getAddress());
-                setCcn(accountProfileData.getCreditCard());
+                setCcn(accountProfileData.getMaskedCreditCard());
                 setEmail(accountProfileData.getEmail());
                 setFullname(accountProfileData.getFullName());
-                setCpassword(accountProfileData.getPassword());
+                setPassword("");
+                setCpassword("");
                 return "Ready to Trade";
             }
             Log.log("TradeAppJsfBridge.login(...)", "Error finding account for user " + userID,

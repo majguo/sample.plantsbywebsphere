@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -25,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
@@ -50,15 +55,22 @@ class DayTraderStreamingIntegrationTest extends AbstractDayTraderIntegrationTest
     private HttpClient httpClient;
 
     @BeforeEach
-    void setUpClient() {
+    void setUpClient() throws Exception {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         httpClient = HttpClient.newBuilder()
+            .cookieHandler(cookieManager)
                 .connectTimeout(Duration.ofSeconds(5))
                 .build();
+        when(tradeServicesFacade.login("uid:1", "secret")).thenReturn(account("uid:1"));
+        when(tradeServicesFacade.getAccountData("uid:1")).thenReturn(account("uid:1"));
         when(tradeServicesFacade.getMarketSummary()).thenReturn(emptySummary());
     }
 
     @Test
     void sseEndpointEmitsImmediateWelcomeFrame() throws Exception {
+        authenticateSession();
+
         HttpRequest request = HttpRequest.newBuilder(baseUri("/rest/broadcastevents"))
                 .timeout(Duration.ofSeconds(5))
                 .header("Accept", "text/event-stream")
@@ -79,6 +91,8 @@ class DayTraderStreamingIntegrationTest extends AbstractDayTraderIntegrationTest
 
     @Test
     void websocketEndpointReturnsRecentQuoteChangesAndMarketSummaryPayloads() throws Exception {
+        authenticateSession();
+
         QuoteDataBean quote = quote("s:1", "s:1", new BigDecimal("12.34"), 1.25d);
         recentQuotePriceChangeList.add(quote);
 
@@ -136,6 +150,25 @@ class DayTraderStreamingIntegrationTest extends AbstractDayTraderIntegrationTest
     private URI baseUri(String path) {
         return URI.create("http://localhost:" + port + "/daytrader" + path);
     }
+
+        private void authenticateSession() throws Exception {
+        String loginBody = UriComponentsBuilder.newInstance()
+            .queryParam("action", "login")
+            .queryParam("uid", "uid:1")
+            .queryParam("passwd", "secret")
+            .build()
+            .getQuery();
+
+        HttpResponse<String> loginResponse = httpClient.send(
+            HttpRequest.newBuilder(baseUri("/app"))
+                .timeout(Duration.ofSeconds(5))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(loginBody))
+                .build(),
+            HttpResponse.BodyHandlers.ofString());
+
+        org.junit.jupiter.api.Assertions.assertEquals(HttpStatus.OK.value(), loginResponse.statusCode());
+        }
 
     private URI baseWsUri(String path) {
         return URI.create("ws://localhost:" + port + "/daytrader" + path);

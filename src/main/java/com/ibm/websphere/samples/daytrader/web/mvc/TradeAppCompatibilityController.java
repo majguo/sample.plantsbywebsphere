@@ -82,7 +82,7 @@ public class TradeAppCompatibilityController {
             }
             return welcome(model, "\nCould not find account for + " + userId);
         } catch (RuntimeException exception) {
-            return welcome(model, "illegal argument:" + exception.getMessage());
+            return welcome(model, "Login failed");
         }
     }
 

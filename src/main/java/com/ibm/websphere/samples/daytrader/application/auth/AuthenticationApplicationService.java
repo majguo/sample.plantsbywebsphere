@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
@@ -18,14 +19,17 @@ public class AuthenticationApplicationService {
     private final AccountProfileJpaRepository accountProfileRepository;
     private final AccountDataJpaRepository accountRepository;
     private final KeySequenceJdbcRepository keySequenceRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthenticationApplicationService(
             AccountProfileJpaRepository accountProfileRepository,
             AccountDataJpaRepository accountRepository,
-            KeySequenceJdbcRepository keySequenceRepository) {
+            KeySequenceJdbcRepository keySequenceRepository,
+            PasswordEncoder passwordEncoder) {
         this.accountProfileRepository = accountProfileRepository;
         this.accountRepository = accountRepository;
         this.keySequenceRepository = keySequenceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -45,9 +49,9 @@ public class AuthenticationApplicationService {
     public AccountProfileDataBean updateAccountProfile(AccountProfileDataBean profileData) {
         AccountProfileDataBean profile = getRequiredProfile(profileData.getUserID());
         profile.setAddress(profileData.getAddress());
-        profile.setPassword(profileData.getPassword());
+        profile.setPassword(passwordEncoder.encode(profileData.getPassword()));
         profile.setFullName(profileData.getFullName());
-        profile.setCreditCard(profileData.getCreditCard());
+        profile.setCreditCard(maskCreditCard(profileData.getCreditCard()));
         profile.setEmail(profileData.getEmail());
         return profile;
     }
@@ -56,7 +60,13 @@ public class AuthenticationApplicationService {
     public AccountDataBean login(String userID, String password) {
         AccountProfileDataBean profile = getRequiredProfile(userID);
         AccountDataBean account = profile.getAccount();
-        account.login(password);
+        if (!passwordMatches(profile, password)) {
+            throw new IllegalArgumentException("Login failed for user " + userID);
+        }
+        if (isLegacyPlaintextPassword(profile)) {
+            profile.setPassword(passwordEncoder.encode(password));
+        }
+        account.login(password, candidate -> true);
         account.setProfileID(profile.getUserID());
         return account;
     }
@@ -79,7 +89,13 @@ public class AuthenticationApplicationService {
             return null;
         }
 
-        AccountProfileDataBean profile = new AccountProfileDataBean(userID, password, fullname, address, email, creditcard);
+        AccountProfileDataBean profile = new AccountProfileDataBean(
+            userID,
+            passwordEncoder.encode(password),
+            fullname,
+            address,
+            email,
+            maskCreditCard(creditcard));
         AccountDataBean account = new AccountDataBean(0, 0, null, new Timestamp(System.currentTimeMillis()), openBalance, openBalance, userID);
         account.setAccountID(keySequenceRepository.nextValue("account", 1));
         profile.setAccount(account);
@@ -94,5 +110,34 @@ public class AuthenticationApplicationService {
     private AccountProfileDataBean getRequiredProfile(String userID) {
         return accountProfileRepository.findById(userID)
                 .orElseThrow(() -> new IllegalStateException("No such user: " + userID));
+    }
+
+    private boolean passwordMatches(AccountProfileDataBean profile, String password) {
+        String storedPassword = profile.getPassword();
+        if (storedPassword == null) {
+            return false;
+        }
+        if (isLegacyPlaintextPassword(profile)) {
+            return storedPassword.equals(password);
+        }
+        return passwordEncoder.matches(password, storedPassword);
+    }
+
+    private boolean isLegacyPlaintextPassword(AccountProfileDataBean profile) {
+        String storedPassword = profile.getPassword();
+        return storedPassword != null && !storedPassword.startsWith("$2a$")
+                && !storedPassword.startsWith("$2b$")
+                && !storedPassword.startsWith("$2y$");
+    }
+
+    private String maskCreditCard(String creditCard) {
+        if (creditCard == null || creditCard.isBlank()) {
+            return "";
+        }
+        String digits = creditCard.replaceAll("\\s+", "");
+        if (digits.length() <= 4) {
+            return "****";
+        }
+        return "****-****-****-" + digits.substring(digits.length() - 4);
     }
 }

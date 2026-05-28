@@ -42,8 +42,16 @@ import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 @ActiveProfiles("test")
 class DayTraderJourneyIntegrationTest extends AbstractDayTraderIntegrationTestSupport {
 
+        private static final String OPERATOR_USER_ID = "uid:0";
+
     @Autowired
     private MockMvc mockMvc;
+
+        private MockHttpSession operatorSession() {
+                MockHttpSession session = new MockHttpSession();
+                session.setAttribute("uidBean", OPERATOR_USER_ID);
+                return session;
+        }
 
     @Test
     void loginHomeAndLogoutJourneyPreservesCompatibilitySessionMarkers() throws Exception {
@@ -94,7 +102,10 @@ class DayTraderJourneyIntegrationTest extends AbstractDayTraderIntegrationTestSu
                 .andExpect(forwardedUrl("/register.jsp"))
                 .andExpect(model().attribute("results", "Registration operation failed, your passwords did not match"));
 
+        MockHttpSession operatorSession = operatorSession();
+
         mockMvc.perform(post("/config")
+                        .session(operatorSession)
                         .param("action", "updateConfig")
                         .param("OrderProcessingMode", "1")
                         .param("WebInterface", "2")
@@ -120,6 +131,7 @@ class DayTraderJourneyIntegrationTest extends AbstractDayTraderIntegrationTestSu
         org.junit.jupiter.api.Assertions.assertEquals(1, TradeConfig.getOrderProcessingMode());
 
         mockMvc.perform(post("/config")
+                        .session(operatorSession)
                         .param("action", "buildDB"))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/config.jsp"))
@@ -167,12 +179,14 @@ class DayTraderJourneyIntegrationTest extends AbstractDayTraderIntegrationTestSu
                 .andExpect(forwardedUrl("/order.jsp"))
                 .andExpect(model().attributeExists("orderData"));
 
-        mockMvc.perform(get("/rest/quotes/s:1"))
+        mockMvc.perform(get("/rest/quotes/s:1")
+                        .session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].symbol").value("s:1"));
 
         mockMvc.perform(post("/rest/quotes")
+                        .session(session)
                         .contentType("application/x-www-form-urlencoded")
                         .param("symbols", "s:1"))
                 .andExpect(status().isOk())

@@ -53,3 +53,53 @@
   `http://localhost:9080/daytrader` still saw connection refused.
 - Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
   architect/trade-services-migration-seam]
+
+## [t17] Architecture review found remaining conformance gaps in the Boot rewrite
+- Structural alignment is good on WAR packaging, `/daytrader` context root, the canonical
+  `TradeServices` seam, the JSF compatibility slice, and the durable `ORDERWORKEJB` async worker.
+- The review failed on three HIGH findings: streaming adapters are still outside the authenticated
+  session boundary, market-summary push cadence is fixed to a Boot property instead of the mutable
+  runtime settings model, and the main build still compiles a broad `javax.*` surface through
+  Java EE 8 compatibility dependencies.
+- The highest-value local follow-up is to fix streaming auth/session enforcement in the Boot-owned
+  SSE and WebSocket path instead of reopening the application seam or persistence design.
+- Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
+  architect/spring-boot-war-and-jsf-compat-layer, architect/trade-services-migration-seam]
+
+## [t19.1] Smoke rerun stayed green after remediation
+- Post-remediation smoke evidence is still green on the packaged Spring Boot WAR under JDK 17:
+  full root packaging passed, Tomcat bound `/daytrader` on port `19087`, and the HTTP probe
+  returned `200`.
+- The first rerun using `-DskipTests` was not reliable in this shell session because Maven still
+  entered the test phase; the clean architect-owned build verdict came from rerunning with
+  `-Dmaven.test.skip=true`.
+- The only residual runtime risk remains the existing Derby `10.14` versus Hibernate `6.4.8.Final`
+  compatibility warning; it did not block build or startup.
+- Learnings consumed: [architect/smoke-verify-windows-jdk17-war,
+  architect/explicit-runtime-contracts-for-boot-target,
+  architect/spring-boot-war-and-jsf-compat-layer]
+
+## [t19] Smoke verification passed on the packaged Spring Boot WAR under JDK 17
+- Full root build passed with `cmd /d /c "...&& mvn -DskipTests clean package"`, producing the
+  repackaged executable WAR without plugin failures.
+- Independent runtime verification passed on port `19086`: Tomcat bound `/daytrader`, startup
+  completed in `18.868 s`, and `http://127.0.0.1:19086/daytrader/` returned `200`.
+- The main residual risk is environment compatibility rather than startup correctness: Hibernate
+  `6.4.8.Final` still warns that Derby `10.14` is below its supported minimum `10.15.2`.
+- On Windows, the deterministic smoke-build path is `cmd /d /c` with JDK 17 exported first;
+  interrupted `mvn.cmd` runs from PowerShell can drop into `Terminate batch job` and muddy the
+  verdict.
+- Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
+  architect/spring-boot-war-and-jsf-compat-layer]
+
+## [t17.2] Re-review confirmed the remediation closes the three architecture blockers
+- The Boot rewrite now enforces one `CompatibilitySessionFacade`-owned boundary across `/config`,
+  `/rest/quotes/**`, `/rest/broadcastevents`, and the `/marketsummary` WebSocket handshake.
+- `MarketSummaryPublisher` now derives publication timing from `RuntimeSettingsService`, restoring
+  `/config` as the authoritative operator surface for streaming cadence.
+- The active Boot compilation path no longer carries non-JDK `javax.*` usage; dormant legacy
+  packages remain only behind Maven compiler exclusions.
+- Focused validation under JDK 17 passed with `BUILD SUCCESS`; Maven exercised 24 tests in the
+  targeted slice despite the narrow `-Dtest` selector.
+- Learnings consumed: [architect/explicit-runtime-contracts-for-boot-target,
+  architect/streaming-auth-boundary-must-be-explicit, backend/session-boundary-for-rest-and-streaming]

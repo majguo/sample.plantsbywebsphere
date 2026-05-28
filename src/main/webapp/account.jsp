@@ -294,7 +294,7 @@
                                     <TD colspan="2" width="228"><INPUT
                                         size="30" type="password"
                                         maxlength="30" name="password"
-                                        value="<%=accountProfileData.getPassword()%>"></TD>
+                                        value=""></TD>
                                     <TD align="right" width="73"
                                         colspan="2"><A
                                         href="docs/glossary.html">address:
@@ -312,7 +312,7 @@
                                         width="228"><INPUT
                                         size="30" type="password"
                                         maxlength="30" name="cpassword"
-                                        value="<%=accountProfileData.getPassword()%>"></TD>
+                                        value=""></TD>
                                     <TD align="right" width="73"
                                         colspan="2"><A
                                         href="docs/glossary.html">credit
@@ -320,7 +320,7 @@
                                     <TD align="left"><INPUT
                                         size="30" type="text"
                                         maxlength="30" name="creditcard"
-                                        value="<%=accountProfileData.getCreditCard()%>"
+                                        value="<%=accountProfileData.getMaskedCreditCard()%>"
                                         readonly></TD>
                                 </TR>
                                 <TR>

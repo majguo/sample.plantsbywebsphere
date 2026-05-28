@@ -10,13 +10,18 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class MarketSummaryWebSocketConfig implements WebSocketConfigurer {
 
     private final MarketSummaryWebSocketHandler handler;
+    private final MarketSummaryHandshakeInterceptor handshakeInterceptor;
 
-    public MarketSummaryWebSocketConfig(MarketSummaryWebSocketHandler handler) {
+    public MarketSummaryWebSocketConfig(
+            MarketSummaryWebSocketHandler handler,
+            MarketSummaryHandshakeInterceptor handshakeInterceptor) {
         this.handler = handler;
+        this.handshakeInterceptor = handshakeInterceptor;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(handler, "/marketsummary").setAllowedOriginPatterns("*");
+        registry.addHandler(handler, "/marketsummary")
+                .addInterceptors(handshakeInterceptor);
     }
 }

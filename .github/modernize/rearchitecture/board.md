@@ -31,7 +31,7 @@
 ### Phase: Scaffold 📌 ee92a10
 - ✅ t9 [backend] Scaffold Spring Boot WAR shell, platform shell, and web assets (2026-05-27T07:57:05Z→2026-05-28T02:10:37Z, 18h 13m 32s)
 
-### Phase: Implementation
+### Phase: Implementation 📌 878f902
 - ✅ t10 [backend] Implement canonical TradeServices facade, business seam, and same-schema persistence (2026-05-28T02:12:32Z→2026-05-28T02:24:26Z, 11m 54s) [deps: t9]
 - ✅ t11 [backend] Rebuild session auth, account, and portfolio flows (2026-05-28T02:24:26Z→2026-05-28T02:38:46Z, 14m 20s) [deps: t10]
 - ✅ t12 [backend] Rebuild trading, quotes, order confirmation, and market summary flows (2026-05-28T04:22:54Z→2026-05-28T04:27:21Z, 4m 27s) [deps: t10, t11]
@@ -42,12 +42,16 @@
 - ✅ t16.1 [backend] Fix streaming hub disconnect handling for SSE/WebSocket validation (2026-05-28T05:06:51Z→2026-05-28T05:11:37Z, 4m 46s) [deps: t14]
 
 ### Phase: Review
-- 🔄 t17 [architect] Architecture review: verify implementation against target design (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
-- 🔄 t18 [security] Security audit: authentication, validation, secrets, and dependencies (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
+- ✅ t17 [architect] Architecture review: verify implementation against target design (2026-05-28T05:41:23Z→2026-05-28T05:47:04Z, 5m 41s) [deps: t10, t11, t12, t13, t14, t15, t16]
+- ✅ t18 [security] Security audit: authentication, validation, secrets, and dependencies (2026-05-28T05:41:23Z→2026-05-28T05:58:35Z, 17m 12s) [deps: t10, t11, t12, t13, t14, t15, t16]
+- ✅ t17.1 [backend] Repair auth boundaries, runtime-settings authority, secret exposure, and active javax dependency drift (2026-05-28T06:19:52Z→2026-05-28T06:25:26Z, 5m 34s) [deps: t17, t18]
+- ✅ t17.2 [architect] Re-run architecture review after remediation (2026-05-28T06:26:25Z→2026-05-28T06:31:42Z, 5m 17s) [deps: t17.1]
+- ✅ t18.1 [security] Re-run security audit after remediation (2026-05-28T06:26:25Z→2026-05-28T06:30:45Z, 4m 20s) [deps: t17.1]
 
 ### Phase: Testing
-- 🔄 t19 [architect] Smoke test: build, startup, and port verification (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
-- ⏳ t20 [tester] Runtime validation: integration, streaming, and browser parity testing [deps: t17, t18, t19]
+- ✅ t19 [architect] Smoke test: build, startup, and port verification (2026-05-28T05:41:23Z→2026-05-28T05:48:04Z, 6m 41s) [deps: t10, t11, t12, t13, t14, t15, t16]
+- ✅ t19.1 [architect] Re-run smoke test after remediation (2026-05-28T06:26:25Z→2026-05-28T06:32:30Z, 6m 05s) [deps: t17.1]
+- ⏳ t20 [tester] Runtime validation: integration, streaming, and browser parity testing [deps: t17.2, t18.1, t19.1]
 
 ### Phase: Conformance
 - ⏳ t21 [pm] Feature parity sign-off: verify requirements checklist completion [deps: t20]

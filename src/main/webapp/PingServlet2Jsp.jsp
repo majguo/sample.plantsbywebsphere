@@ -24,7 +24,7 @@
 <BODY>
     <%!String initTime = (new java.util.Date()).toString();%>
     <jsp:useBean id="ab"
-        type="com.ibm.websphere.samples.daytrader.web.prims.PingBean"
+        type="com.ibm.websphere.samples.daytrader.web.mvc.PingMessageBean"
         scope="request" />
     <HR>
     <FONT size="+2" color="#000066"><BR> Ping Servlet2JSP:<BR>

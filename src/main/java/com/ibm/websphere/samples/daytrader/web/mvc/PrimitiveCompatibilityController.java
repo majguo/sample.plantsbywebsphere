@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ibm.websphere.samples.daytrader.web.prims.PingBean;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -42,7 +40,7 @@ public class PrimitiveCompatibilityController {
 
     @RequestMapping(value = "/PingServlet2Jsp", method = { RequestMethod.GET, RequestMethod.POST })
     public String pingServlet2Jsp(HttpServletRequest request) {
-        PingBean pingBean = new PingBean();
+        PingMessageBean pingBean = new PingMessageBean();
         pingBean.setMsg("Hit Count: 1");
         request.setAttribute("ab", pingBean);
         return "forward:/PingServlet2Jsp.jsp";

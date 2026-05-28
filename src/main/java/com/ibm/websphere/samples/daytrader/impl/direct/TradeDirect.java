@@ -1413,7 +1413,7 @@ public class TradeDirect implements TradeServices, Serializable {
     AccountDataBean accountData = null;
     Connection conn = null;
     try {
-      Log.trace("TradeDirect:login - inSession(" + this.inSession + ")", userID, password);
+      Log.trace("TradeDirect:login - inSession(" + this.inSession + ")", userID, "[PROTECTED]");
 
       conn = getConn();
       PreparedStatement stmt = getStatement(conn, getAccountProfileSQL);
@@ -1428,7 +1428,7 @@ public class TradeDirect implements TradeServices, Serializable {
       String pw = rs.getString("passwd");
       stmt.close();
       if ((pw == null) || (pw.equals(password) == false)) {
-        String error = "TradeDirect:Login failure for user: " + userID + "\n\tIncorrect password-->" + userID + ":" + password;
+        String error = "TradeDirect:Login failure for user: " + userID;
         Log.error(error);
         throw new Exception(error);
       }

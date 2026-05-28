@@ -20,8 +20,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.ejb.EJBException;
+import java.util.function.Predicate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,9 +33,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
@@ -243,11 +242,16 @@ public class AccountDataBean implements Serializable {
     }
 
     public void login(String password) {
+        login(password, candidate -> {
+            AccountProfileDataBean profile = getProfile();
+            return profile != null && profile.getPassword() != null && profile.getPassword().equals(candidate);
+        });
+    }
+
+    public void login(String password, Predicate<String> passwordMatches) {
         AccountProfileDataBean profile = getProfile();
-        if ((profile == null) || (profile.getPassword().equals(password) == false)) {
-            String error = "AccountBean:Login failure for account: " + getAccountID()
-                    + ((profile == null) ? "null AccountProfile" : "\n\tIncorrect password-->" + profile.getUserID() + ":" + profile.getPassword());
-            throw new EJBException(error);
+        if (profile == null || !passwordMatches.test(password)) {
+            throw new IllegalArgumentException("Account login failed for account: " + getAccountID());
         }
 
         setLastLogin(new Timestamp(System.currentTimeMillis()));

@@ -15,7 +15,7 @@
  */
 package com.ibm.websphere.samples.daytrader.util;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 import com.ibm.websphere.samples.daytrader.interfaces.RuntimeMode;
 

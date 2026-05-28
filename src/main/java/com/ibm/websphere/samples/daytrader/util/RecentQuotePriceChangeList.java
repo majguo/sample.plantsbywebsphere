@@ -17,9 +17,9 @@ package com.ibm.websphere.samples.daytrader.util;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

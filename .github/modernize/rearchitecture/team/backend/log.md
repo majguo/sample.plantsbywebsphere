@@ -63,3 +63,10 @@
 - A narrow hub regression test was enough to lock the cleanup rule down, and the tester's live `DayTraderStreamingIntegrationTest` passed immediately afterward under JDK 17.
 - Tomcat still logs an expected client-aborted socket `IOException` when the SSE test closes the stream; that noise does not represent a backend contract failure once publication continues cleanly.
 - Learnings consumed: [backend/boot-streaming-and-order-work]
+
+## [t17.1] Revalidated and locked the repaired auth/runtime/secret review slice
+- The current workspace already carried the substantive backend remediation for this review slice: `/config` is operator-gated through the shared session interceptor, REST/SSE use the authenticated `uidBean` boundary, `/marketsummary` enforces auth plus same-origin at handshake time, market-summary publication cadence comes from `RuntimeSettingsService`, and auth writes now hash passwords while masking credit-card values.
+- The local defect found during focused validation was only in the new regression harness: the anonymous REST POST probe needed `application/x-www-form-urlencoded` so the auth interceptor, not media-type negotiation, owned the outcome.
+- The durable value added in this task was focused regression coverage for operator-only config access, REST/SSE auth enforcement, WebSocket handshake auth/origin rules, and secret redaction so later review reruns can rely on executable evidence instead of source inspection alone.
+- The repo still contains legacy `javax.*` source in excluded compatibility packages, but the active Boot build surface validated here no longer relies on the Java EE umbrella dependencies that previously masked migration drift.
+- Learnings consumed: [backend/boot-mvc-operator-surfaces, backend/boot-streaming-and-order-work, backend/mvc-app-session-compatibility]
