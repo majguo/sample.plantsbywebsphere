@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
-const baseURL = process.env.DAYTRADER_BASE_URL ?? 'http://127.0.0.1:19085/daytrader';
+const configuredBaseURL = process.env.DAYTRADER_BASE_URL ?? 'http://127.0.0.1:19085/daytrader';
+const baseURL = configuredBaseURL.endsWith('/') ? configuredBaseURL : `${configuredBaseURL}/`;
 
 export default defineConfig({
   testDir: './tests',

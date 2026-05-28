@@ -1,8 +1,8 @@
 ----------------------------------------------------------------
-Thu May 28 14:31:34 CST 2026:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019e-6d47-f9cf-0000047d3f48 
-on database directory C:\Users\jiangma\Workspace\repos\sample.daytrader8\resources\data\tradedb with class loader org.springframework.boot.loader.launch.LaunchedClassLoader@79fc0f2f 
-Loaded from jar:nested:/C:/Users/jiangma/Workspace/repos/sample.daytrader8/target/io.openliberty.sample.daytrader8.war/!WEB-INF/lib/derby-10.14.2.0.jar!/
+Thu May 28 14:45:31 CST 2026:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-019e-6d54-be5e-0000056dda18 
+on database directory C:\Users\jiangma\Workspace\repos\sample.daytrader8\resources\data\tradedb with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@c387f44 
+Loaded from file:/C:/Users/jiangma/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Microsoft
 java.runtime.version=17.0.18+8-LTS
 user.dir=C:\Users\jiangma\Workspace\repos\sample.daytrader8
