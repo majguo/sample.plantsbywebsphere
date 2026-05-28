@@ -31,19 +31,19 @@ assessment:
 progress_sync:
   run_id: "429ecde6-5f94-41ab-81a5-237a2d9d5800"
   grouping_mode: "none"
-  execution_mode: "saved"
+  execution_mode: "all-at-once"
   plan_start_time: "2026-05-27T06:29:51Z"
   plan_completed_time: "2026-05-27T07:53:04Z"
-  execution_start_time: ""
+  execution_start_time: "2026-05-27T07:57:05Z"
   execution_completed_time: ""
   validation_start_time: ""
   validation_completed_time: ""
-  total_phases: 5
-  completed_phases: 5
+  total_phases: 10
+  completed_phases: 6
   total_modules: 1
   completed_modules: 0
-  total_tasks: 12
-  completed_tasks: 12
-  total_commits: 41
+  total_tasks: 26
+  completed_tasks: 13
+  total_commits: 42
   build_verified: false
   test_verified: false

@@ -17,3 +17,7 @@ INFO: t2.1 fixes the Spring Boot 3 target around explicit runtime contracts. Dow
 ## 2026-05-27T07:30:05Z [teamlead] t4.1
 
 INFO: Readiness evidence for DayTrader8 is now governed as staged states: build-ready, startup-ready, surface-ready, journey-ready, and release-ready. Downstream planning and validation must treat missing evidence as FAIL, must disclose per-capability fallbacks explicitly, and must not use startup proof as parity proof.
+
+## 2026-05-28T02:10:37Z [coordinator] t9
+
+WARNING: Workspace Maven defaults to Java 11. Spring Boot 3 packaging and startup validated only after overriding `JAVA_HOME` to Microsoft JDK 17. Downstream backend and test execution must use JDK 17+.

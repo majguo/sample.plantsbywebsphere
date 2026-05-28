@@ -24,8 +24,30 @@
 ### Phase: Execution Plan 📌 8df3c86
 - ✅ t7 [teamlead] Create implementation plan and task breakdown (2026-05-27T07:31:58Z→2026-05-27T07:37:05Z, 5m 07s) [deps: t4.1, t5, t6]
 
-### Phase: Plan Gate
+### Phase: Plan Gate 📌 79cb535
 - ✅ t8 [teamlead] Run implementation-plan quality gate (2026-05-27T07:47:55Z→2026-05-27T07:52:13Z, 4m 18s) [deps: t7, t8.1]
 - ✅ t8.1 [teamlead] Repair implementation-plan traceability metadata and source anchors (2026-05-27T07:42:25Z→2026-05-27T07:47:31Z, 5m 06s) [deps: t7]
 
-⏳ [Execute + Validate phases — pending deep planning completion]
+### Phase: Scaffold
+- ✅ t9 [backend] Scaffold Spring Boot WAR shell, platform shell, and web assets (2026-05-27T07:57:05Z→2026-05-28T02:10:37Z, 18h 13m 32s)
+
+### Phase: Implementation
+- ⏳ t10 [backend] Implement canonical TradeServices facade, business seam, and same-schema persistence [deps: t9]
+- ⏳ t11 [backend] Rebuild session auth, account, and portfolio flows [deps: t10]
+- ⏳ t12 [backend] Rebuild trading, quotes, order confirmation, and market summary flows [deps: t10, t11]
+- ⏳ t13 [backend] Rebuild operator configuration, reset, rebuild, scenario, and run-stats [deps: t10]
+- ⏳ t14 [backend] Implement REST, SSE, WebSocket, and async order completion infrastructure [deps: t10]
+- ⏳ t15 [backend] Rebuild JSF/XHTML compatibility, primitives, and alternate surfaces [deps: t9, t11]
+- ⏳ t16 [tester] Build deterministic test harness, validation infrastructure, and journey suites [deps: t9, t10, t11, t12, t13, t14, t15]
+
+### Phase: Review
+- ⏳ t17 [architect] Architecture review: verify implementation against target design [deps: t10, t11, t12, t13, t14, t15, t16]
+- ⏳ t18 [security] Security audit: authentication, validation, secrets, and dependencies [deps: t10, t11, t12, t13, t14, t15, t16]
+
+### Phase: Testing
+- ⏳ t19 [architect] Smoke test: build, startup, and port verification [deps: t10, t11, t12, t13, t14, t15, t16]
+- ⏳ t20 [tester] Runtime validation: integration, streaming, and browser parity testing [deps: t17, t18, t19]
+
+### Phase: Conformance
+- ⏳ t21 [pm] Feature parity sign-off: verify requirements checklist completion [deps: t20]
+- ⏳ t22 [teamlead] Conformance review: verify test coverage and quality gates [deps: t20]

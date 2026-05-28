@@ -22,3 +22,8 @@
 
 **Decision**: Govern readiness evidence as staged binary states.
 **Rationale**: Downstream work must distinguish build, startup, surface, journey, and release readiness; missing evidence is a FAIL and startup proof cannot substitute for parity proof.
+
+## [COORDINATOR] [t9] - 2026-05-28
+
+**Decision**: Treat JDK 17+ as the authoritative execution environment for Spring Boot 3 work in this repo.
+**Rationale**: Scaffold packaging and startup only validated after overriding the workspace default Java 11 toolchain to JDK 17.

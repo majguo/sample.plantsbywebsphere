@@ -1,0 +1,18 @@
+taskId: t9
+role: backend
+status: completed
+planItems:
+  - 1.1
+  - 1.2
+requirements:
+  - REQ-001
+  - REQ-026
+  - REQ-027
+  - REQ-028
+artifacts:
+  - t9-backend.md
+evidence:
+  - command: "$env:JAVA_HOME=...microsoft17-jdk...; mvn -DskipTests package"
+    result: passed
+  - command: "$env:JAVA_HOME=...microsoft17-jdk...; java -jar target\\io.openliberty.sample.daytrader8.war --server.port=19080"
+    result: passed
