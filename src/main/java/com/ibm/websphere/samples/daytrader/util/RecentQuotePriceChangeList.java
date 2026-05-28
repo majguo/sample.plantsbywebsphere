@@ -17,18 +17,15 @@ package com.ibm.websphere.samples.daytrader.util;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.enterprise.event.NotificationOptions;
-import javax.inject.Inject;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
+
+import com.ibm.websphere.samples.daytrader.streaming.QuotePriceChangeEvent;
 import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
-import com.ibm.websphere.samples.daytrader.interfaces.QuotePriceChange;
 
 
 /** This class is a holds the last 5 stock changes, used by the MarketSummary WebSocket
@@ -36,18 +33,16 @@ import com.ibm.websphere.samples.daytrader.interfaces.QuotePriceChange;
  *  It fires a CDI event everytime a price change is added
  **/
 
-@ApplicationScoped
+@Component
 public class RecentQuotePriceChangeList  {
 
-  private List<QuoteDataBean> list = new CopyOnWriteArrayList<QuoteDataBean>();
-  private int maxSize = 5;
+  private final CopyOnWriteArrayList<QuoteDataBean> list = new CopyOnWriteArrayList<QuoteDataBean>();
+  private final ApplicationEventPublisher eventPublisher;
+  private final int maxSize = 5;
 
-  @Resource
-  private ManagedExecutorService mes;
-
-  @Inject
-  @QuotePriceChange
-  Event<String> quotePriceChangeEvent;
+  public RecentQuotePriceChangeList(ApplicationEventPublisher eventPublisher) {
+    this.eventPublisher = eventPublisher;
+  }
 
   public boolean add(QuoteDataBean quoteData) {
 
@@ -59,10 +54,11 @@ public class RecentQuotePriceChangeList  {
       // Add stock, remove if needed
       if(list.size() > maxSize) {
         list.remove(maxSize);
-      }      
-      quotePriceChangeEvent.fireAsync("quotePriceChange for symbol: " + quoteData.getSymbol(), NotificationOptions.builder().setExecutor(mes).build());
+      }
+      eventPublisher.publishEvent(new QuotePriceChangeEvent(recentList()));
+      return true;
     }
-    return true;
+    return false;
   }
 
   public boolean isEmpty() {
@@ -72,6 +68,6 @@ public class RecentQuotePriceChangeList  {
   @Size(max=5)
   @NotEmpty
   public List<@NotNull QuoteDataBean> recentList() {
-    return list;
+    return new CopyOnWriteArrayList<QuoteDataBean>(list);
   }
 }

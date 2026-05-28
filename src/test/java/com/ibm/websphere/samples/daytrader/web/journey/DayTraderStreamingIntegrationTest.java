@@ -1,0 +1,2 @@
+// Legacy placeholder kept only because workspace file deletion is not reliable here.
+// Active tester-owned streaming coverage now lives under com.ibm.websphere.samples.daytrader.integration.streaming.

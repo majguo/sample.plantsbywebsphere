@@ -28,24 +28,25 @@
 - ✅ t8 [teamlead] Run implementation-plan quality gate (2026-05-27T07:47:55Z→2026-05-27T07:52:13Z, 4m 18s) [deps: t7, t8.1]
 - ✅ t8.1 [teamlead] Repair implementation-plan traceability metadata and source anchors (2026-05-27T07:42:25Z→2026-05-27T07:47:31Z, 5m 06s) [deps: t7]
 
-### Phase: Scaffold
+### Phase: Scaffold 📌 ee92a10
 - ✅ t9 [backend] Scaffold Spring Boot WAR shell, platform shell, and web assets (2026-05-27T07:57:05Z→2026-05-28T02:10:37Z, 18h 13m 32s)
 
 ### Phase: Implementation
-- ⏳ t10 [backend] Implement canonical TradeServices facade, business seam, and same-schema persistence [deps: t9]
-- ⏳ t11 [backend] Rebuild session auth, account, and portfolio flows [deps: t10]
-- ⏳ t12 [backend] Rebuild trading, quotes, order confirmation, and market summary flows [deps: t10, t11]
-- ⏳ t13 [backend] Rebuild operator configuration, reset, rebuild, scenario, and run-stats [deps: t10]
-- ⏳ t14 [backend] Implement REST, SSE, WebSocket, and async order completion infrastructure [deps: t10]
-- ⏳ t15 [backend] Rebuild JSF/XHTML compatibility, primitives, and alternate surfaces [deps: t9, t11]
-- ⏳ t16 [tester] Build deterministic test harness, validation infrastructure, and journey suites [deps: t9, t10, t11, t12, t13, t14, t15]
+- ✅ t10 [backend] Implement canonical TradeServices facade, business seam, and same-schema persistence (2026-05-28T02:12:32Z→2026-05-28T02:24:26Z, 11m 54s) [deps: t9]
+- ✅ t11 [backend] Rebuild session auth, account, and portfolio flows (2026-05-28T02:24:26Z→2026-05-28T02:38:46Z, 14m 20s) [deps: t10]
+- ✅ t12 [backend] Rebuild trading, quotes, order confirmation, and market summary flows (2026-05-28T04:22:54Z→2026-05-28T04:27:21Z, 4m 27s) [deps: t10, t11]
+- ✅ t13 [backend] Rebuild operator configuration, reset, rebuild, scenario, and run-stats (2026-05-28T04:22:54Z→2026-05-28T04:28:36Z, 5m 42s) [deps: t10]
+- ✅ t14 [backend] Implement REST, SSE, WebSocket, and async order completion infrastructure (2026-05-28T02:24:26Z→2026-05-28T02:38:46Z, 14m 20s) [deps: t10]
+- ✅ t15 [backend] Rebuild JSF/XHTML compatibility, primitives, and alternate surfaces (2026-05-28T04:43:46Z→2026-05-28T04:50:14Z, 6m 28s) [deps: t9, t11]
+- ✅ t16 [tester] Build deterministic test harness, validation infrastructure, and journey suites (2026-05-28T05:31:24Z→2026-05-28T05:41:00Z, 9m 36s) [deps: t9, t10, t11, t12, t13, t14, t15, t16.1]
+- ✅ t16.1 [backend] Fix streaming hub disconnect handling for SSE/WebSocket validation (2026-05-28T05:06:51Z→2026-05-28T05:11:37Z, 4m 46s) [deps: t14]
 
 ### Phase: Review
-- ⏳ t17 [architect] Architecture review: verify implementation against target design [deps: t10, t11, t12, t13, t14, t15, t16]
-- ⏳ t18 [security] Security audit: authentication, validation, secrets, and dependencies [deps: t10, t11, t12, t13, t14, t15, t16]
+- 🔄 t17 [architect] Architecture review: verify implementation against target design (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
+- 🔄 t18 [security] Security audit: authentication, validation, secrets, and dependencies (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
 
 ### Phase: Testing
-- ⏳ t19 [architect] Smoke test: build, startup, and port verification [deps: t10, t11, t12, t13, t14, t15, t16]
+- 🔄 t19 [architect] Smoke test: build, startup, and port verification (dispatched 2026-05-28T05:41:23Z) [deps: t10, t11, t12, t13, t14, t15, t16]
 - ⏳ t20 [tester] Runtime validation: integration, streaming, and browser parity testing [deps: t17, t18, t19]
 
 ### Phase: Conformance

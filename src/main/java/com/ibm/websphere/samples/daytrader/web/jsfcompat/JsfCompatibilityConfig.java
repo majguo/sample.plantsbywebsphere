@@ -1,27 +1,24 @@
 package com.ibm.websphere.samples.daytrader.web.jsfcompat;
 
-import org.springframework.boot.web.servlet.ServletContextInitializer;
+import java.util.List;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import jakarta.servlet.ServletContext;
+import com.ibm.websphere.samples.daytrader.web.filter.JsfCompatibilityLoginFilter;
+import com.ibm.websphere.samples.daytrader.web.mvc.CompatibilitySessionFacade;
 
 @Configuration(proxyBeanMethods = false)
 public class JsfCompatibilityConfig {
 
     @Bean
-    ServletContextInitializer dayTraderFacesContextInitializer() {
-        return servletContext -> {
-            setInitParameterIfAbsent(servletContext, "jakarta.faces.PROJECT_STAGE", "Production");
-            setInitParameterIfAbsent(servletContext, "jakarta.faces.STATE_SAVING_METHOD", "server");
-            setInitParameterIfAbsent(servletContext, "jakarta.faces.DEFAULT_SUFFIX", ".xhtml");
-            servletContext.setSessionTimeout(30);
-        };
-    }
-
-    private static void setInitParameterIfAbsent(ServletContext servletContext, String name, String value) {
-        if (servletContext.getInitParameter(name) == null) {
-            servletContext.setInitParameter(name, value);
-        }
+    FilterRegistrationBean<JsfCompatibilityLoginFilter> jsfCompatibilityLoginFilter(CompatibilitySessionFacade sessionFacade) {
+        FilterRegistrationBean<JsfCompatibilityLoginFilter> registration = new FilterRegistrationBean<>(
+                new JsfCompatibilityLoginFilter(sessionFacade));
+        registration.setName("JsfCompatibilityLoginFilter");
+        registration.setUrlPatterns(List.of("*.faces", "*.xhtml"));
+        registration.setOrder(0);
+        return registration;
     }
 }

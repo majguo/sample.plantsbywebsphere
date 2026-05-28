@@ -28,15 +28,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.sql.DataSource;
+
+import org.springframework.stereotype.Service;
 
 import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.TradeDB;
-import com.ibm.websphere.samples.daytrader.interfaces.TradeJDBC;
 import com.ibm.websphere.samples.daytrader.interfaces.TradeServices;
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.MDBStats;
@@ -49,18 +47,17 @@ import com.ibm.websphere.samples.daytrader.util.TradeConfig;
  * where xxx is a sequential number (e.g. uid:0, uid:1, etc.). New stocks are also created of the
  * form "s:xxx", again where xxx represents sequential numbers (e.g. s:1, s:2, etc.)
  */
-@ApplicationScoped
+@Service
 public class TradeDirectDBUtils implements TradeDB {
 
-  // For Wildfly - add java:/ to this resource.
-  
-  @Resource(lookup = "jdbc/TradeDataSource")
-  //@Resource(lookup = "java:/jdbc/TradeDataSource")
-  private DataSource datasource;
+  private final DataSource datasource;
 
-  @Inject 
-  @TradeJDBC
-  TradeServices ts;
+  private final TradeServices ts;
+
+  public TradeDirectDBUtils(DataSource datasource, TradeServices ts) {
+    this.datasource = datasource;
+    this.ts = ts;
+  }
 
   public String checkDBProductName() throws Exception {
     Connection conn = null;
@@ -74,7 +71,9 @@ public class TradeDirectDBUtils implements TradeDB {
     } catch (SQLException e) {
       Log.error(e, "TradeDirect:checkDBProductName() -- Error checking the Daytrader Database Product Name");
     } finally {
-      conn.close();
+      if (conn != null) {
+        conn.close();
+      }
     }
     return dbProductName;
   }
@@ -236,7 +235,9 @@ public class TradeDirectDBUtils implements TradeDB {
     } catch (Exception e) {
       Log.error(e, "TradeDirect:recreateDBTables() -- Error dropping and recreating the database tables");
     } finally {
-      conn.close();
+      if (conn != null) {
+        conn.close();
+      }
     }
     return success;
   }
@@ -422,10 +423,14 @@ public class TradeDirectDBUtils implements TradeDB {
       System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData);
     } catch (Exception e) {
       Log.error(e, "Failed to reset Trade");
-      conn.rollback();
+      if (conn != null) {
+        conn.rollback();
+      }
       throw e;
     } finally {
-      conn.close();
+      if (conn != null) {
+        conn.close();
+      }
     }
     return runStatsData;
 

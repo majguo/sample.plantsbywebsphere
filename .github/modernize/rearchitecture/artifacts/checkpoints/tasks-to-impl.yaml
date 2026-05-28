@@ -16,3 +16,43 @@ evidence:
     result: passed
   - command: "$env:JAVA_HOME=...microsoft17-jdk...; java -jar target\\io.openliberty.sample.daytrader8.war --server.port=19080"
     result: passed
+---
+taskId: t13
+role: backend
+status: completed
+planItems:
+  - 5.1
+  - 5.2
+requirements:
+  - REQ-018
+  - REQ-019
+  - REQ-020
+  - REQ-021
+  - REQ-029
+artifacts:
+  - t13-backend.md
+evidence:
+  - command: "$env:JAVA_HOME=...microsoft17-jdk...; & \"C:\\Users\\jiangma\\Downloads\\apache-maven-3.9.11\\bin\\mvn.cmd\" -Dtest=TradeConfigControllerTest,TradeScenarioControllerTest test"
+    result: passed
+---
+taskId: t12
+role: backend
+status: completed
+planItems:
+  - 4.1
+  - 4.2
+requirements:
+  - REQ-007
+  - REQ-008
+  - REQ-009
+  - REQ-010
+  - REQ-016
+  - REQ-017
+  - REQ-029
+artifacts:
+  - t12-backend.md
+evidence:
+  - command: "cmd /d /c \"set JAVA_HOME=%USERPROFILE%\\scoop\\apps\\microsoft17-jdk\\current&& set PATH=%JAVA_HOME%\\bin;%PATH%&& mvn -Dtest=TradeAppCompatibilityControllerTest test\""
+    result: passed
+  - command: "VS Code diagnostics: TradeAppCompatibilityController.java, TradeAppCompatibilityControllerTest.java"
+    result: passed

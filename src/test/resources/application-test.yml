@@ -1,0 +1,25 @@
+server:
+  port: 0
+  servlet:
+    context-path: /daytrader
+
+spring:
+  main:
+    banner-mode: off
+
+daytrader:
+  runtime:
+    runtime-mode: 0
+    order-processing-mode: 0
+    long-run: true
+    update-quote-prices: true
+    publish-quote-price-change: true
+    display-order-alerts: true
+    market-summary-interval: 20
+  async:
+    worker-delay-ms: 250
+    max-attempts: 5
+    retry-delay-ms: 2000
+    batch-size: 10
+  streaming:
+    market-summary-publish-delay-ms: 5000
