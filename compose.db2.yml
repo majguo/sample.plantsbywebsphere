@@ -1,0 +1,29 @@
+services:
+  db2:
+    image: ${DAYTRADER_DB2_IMAGE}
+    container_name: ${DAYTRADER_DB2_CONTAINER_NAME}
+    privileged: true
+    ports:
+      - "${DAYTRADER_DB2_PORT}:50000"
+    environment:
+      LICENSE: accept
+      DB2INSTANCE: ${DAYTRADER_DB2_USER}
+      DB2INST1_PASSWORD: ${DAYTRADER_DB2_PASSWORD}
+      DBNAME: ${DAYTRADER_DB2_NAME}
+      SAMPLEDB: "false"
+      ARCHIVE_LOGS: "false"
+      AUTOCONFIG: "false"
+      PERSISTENT_HOME: "false"
+    volumes:
+      - type: bind
+        source: ${DAYTRADER_DB2_DATABASE_DIR}
+        target: /database
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          su - ${DAYTRADER_DB2_USER} -c "db2 connect to ${DAYTRADER_DB2_NAME} >/dev/null 2>&1 && db2 connect reset >/dev/null 2>&1"
+      interval: 15s
+      timeout: 10s
+      retries: 40
+      start_period: 180s

@@ -5,10 +5,9 @@ spring:
     url: jdbc:derby:${daytrader.datasource.path:resources/data/tradedb};create=false
     username: ${DAYTRADER_DB_USER:db_username}
     password: ${DAYTRADER_DB_PASSWORD:db_password}
-    driver-class-name: org.apache.derby.jdbc.EmbeddedDriver
   flyway:
     baseline-on-migrate: true
-    locations: classpath:db/migration/common${daytrader.flyway.additional-locations:}
+    locations: classpath:db/migration/common,classpath:db/migration/shared${daytrader.flyway.additional-locations:}
   jpa:
     hibernate:
       ddl-auto: validate

@@ -111,7 +111,7 @@
         </TBODY>
     </TABLE>
     <TABLE width="636">
-        <jsp:include page="marketSummary.html" />
+        <%@ include file="marketSummary.html" %>
     </TABLE>
     <TABLE height="54" style="font-size: smaller">
         <TBODY>

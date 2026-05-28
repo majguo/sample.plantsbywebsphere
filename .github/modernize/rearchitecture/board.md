@@ -3,6 +3,8 @@
 > Pls migrate the project to spring boot 3.
 
 **Project started**: 2026-05-27T06:29:51Z
+**Project completed**: 2026-05-28T10:44:48Z
+**Total duration**: 1d 4h 14m 57s
 
 ## Tasks
 
@@ -48,11 +50,32 @@
 - ✅ t17.2 [architect] Re-run architecture review after remediation (2026-05-28T06:26:25Z→2026-05-28T06:31:42Z, 5m 17s) [deps: t17.1]
 - ✅ t18.1 [security] Re-run security audit after remediation (2026-05-28T06:26:25Z→2026-05-28T06:30:45Z, 4m 20s) [deps: t17.1]
 
-### Phase: Testing
+### Phase: Testing 📌 85408db
 - ✅ t19 [architect] Smoke test: build, startup, and port verification (2026-05-28T05:41:23Z→2026-05-28T05:48:04Z, 6m 41s) [deps: t10, t11, t12, t13, t14, t15, t16]
 - ✅ t19.1 [architect] Re-run smoke test after remediation (2026-05-28T06:26:25Z→2026-05-28T06:32:30Z, 6m 05s) [deps: t17.1]
 - ✅ t20 [tester] Runtime validation: integration, streaming, and browser parity testing (2026-05-28T06:34:09Z→2026-05-28T06:45:59Z, 11m 50s) [deps: t17.2, t18.1, t19.1]
+- ✅ t20.1 [tester] Execute container-backed primary infra lane and publish per-surface evidence gaps (2026-05-28T06:57:46Z→2026-05-28T07:06:20Z, 8m 34s) [deps: t20]
+- ✅ t20.2 [backend] Add Boot DB2 driver/runtime wiring for the primary infra lane (2026-05-28T06:57:46Z→2026-05-28T07:21:18Z, 23m 32s) [deps: t20.1]
+- ✅ t20.3 [devops] Add reproducible DB2 container/runtime setup for the primary infra lane (2026-05-28T07:21:55Z→2026-05-28T07:31:00Z, 9m 05s) [deps: t20.1]
+- ✅ t20.3.1 [backend] Resolve DB2 Flyway duplicate baseline conflict for Boot startup (2026-05-28T07:31:00Z→2026-05-28T07:39:39Z, 8m 39s) [deps: t20.2, t20.3]
+- ✅ t20.4 [tester] Re-run container-backed primary infra lane and close remaining parity evidence gaps (2026-05-28T07:40:46Z→2026-05-28T07:49:30Z, 8m 44s) [deps: t20.2, t20.3, t20.3.1]
+- ✅ t20.4.1 [backend] Restore DB2 bootstrap and seed-data path for canonical login and quote flows (2026-05-28T07:49:30Z→2026-05-28T08:04:53Z, 15m 23s) [deps: t20.4]
+- ✅ t20.5 [tester] Re-run DB2 primary infra lane after bootstrap fix (2026-05-28T08:05:40Z→2026-05-28T08:21:50Z, 16m 10s) [deps: t20.4.1]
 
 ### Phase: Conformance
-- ⏳ t21 [pm] Feature parity sign-off: verify requirements checklist completion [deps: t20]
-- ⏳ t22 [teamlead] Conformance review: verify test coverage and quality gates [deps: t20]
+- ✅ t21 [pm] Feature parity sign-off: verify requirements checklist completion (2026-05-28T06:48:43Z→2026-05-28T06:54:04Z, 5m 21s) [deps: t20]
+- ✅ t22 [teamlead] Conformance review: verify test coverage and quality gates (2026-05-28T06:48:43Z→2026-05-28T06:57:46Z, 9m 03s) [deps: t20]
+- ✅ t21.1 [pm] Re-run feature parity sign-off after evidence closure (2026-05-28T08:23:08Z→2026-05-28T08:26:37Z, 3m 29s) [deps: t20.5]
+- ✅ t22.1 [teamlead] Regenerate aggregate completeness checkpoints and final conformance inputs (2026-05-28T06:57:46Z→2026-05-28T07:06:20Z, 8m 34s) [deps: t20]
+- ✅ t22.2 [teamlead] Re-run conformance review after remediation (2026-05-28T08:23:08Z→2026-05-28T08:31:51Z, 8m 43s) [deps: t20.5, t22.1]
+- ✅ t21.2 [tester] Collect runtime evidence for primitive, docs, alternate, admin, and scenario surface gaps (2026-05-28T08:31:51Z→2026-05-28T08:40:00Z, 8m 09s) [deps: t20.5, t21.1]
+- ✅ t21.2.1 [backend] Repair seeded DB2 parity regressions for JAX-RS echo, scenario actions, and operator flows (2026-05-28T08:40:00Z→2026-05-28T09:27:40Z, 47m 40s) [deps: t21.2]
+- ✅ t21.2.2 [tester] Re-run seeded DB2 parity evidence after backend regression fixes (2026-05-28T09:28:27Z→2026-05-28T09:47:47Z, 19m 20s) [deps: t21.2.1]
+- ✅ t21.3 [pm] Re-run feature parity sign-off after evidence bundle completion (2026-05-28T09:48:23Z→2026-05-28T09:52:16Z, 3m 53s) [deps: t21.2.2]
+- ✅ t22.3 [teamlead] Re-run conformance review after final parity closure (2026-05-28T09:48:23Z→2026-05-28T09:57:22Z, 9m 59s) [deps: t21.3, t22.1]
+- ✅ t21.4 [tester] Collect explicit runtime proof for remaining docs, alternate, primitive, and image surfaces (2026-05-28T09:57:22Z→2026-05-28T10:05:31Z, 8m 09s) [deps: t21.3]
+- ✅ t21.4.1 [backend] Repair docs assets, primitive launcher routes, and image-mode home rendering parity (2026-05-28T10:05:31Z→2026-05-28T10:24:10Z, 18m 39s) [deps: t21.4]
+- ✅ t21.4.2 [tester] Re-run docs, primitive, and image surface proof after backend fixes (2026-05-28T10:25:08Z→2026-05-28T10:29:53Z, 4m 45s) [deps: t21.4.1]
+- ✅ t21.5 [pm] Re-run feature parity sign-off after final surface-proof closure (2026-05-28T10:31:17Z→2026-05-28T10:35:16Z, 3m 59s) [deps: t21.4.2]
+- ✅ t22.4 [teamlead] Re-run conformance review after final PM closure (2026-05-28T10:31:17Z→2026-05-28T10:38:19Z, 7m 02s) [deps: t21.5, t22.1]
+- ✅ t22.5 [teamlead] Final conformance rerun after PM artifact publication race fix (2026-05-28T10:38:19Z→2026-05-28T10:44:02Z, 5m 43s) [deps: t21.5, t22.1]

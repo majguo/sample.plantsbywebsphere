@@ -15,7 +15,9 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
       <java.version>17</java.version>
+      <version.db2-jcc>11.5.9.0</version.db2-jcc>
       <version.derby>10.14.2.0</version.derby>
+      <version.flyway>10.22.0</version.flyway>
       <version.joinfaces>5.5.14.1</version.joinfaces>
       <testServerHttpPort>9080</testServerHttpPort>
    </properties>
@@ -39,6 +41,19 @@
       <dependency>
          <groupId>org.flywaydb</groupId>
          <artifactId>flyway-core</artifactId>
+         <version>${version.flyway}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.flywaydb</groupId>
+         <artifactId>flyway-database-derby</artifactId>
+         <version>${version.flyway}</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.flywaydb</groupId>
+         <artifactId>flyway-database-db2</artifactId>
+         <version>${version.flyway}</version>
+         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -95,6 +110,12 @@
          <groupId>org.apache.derby</groupId>
          <artifactId>derby</artifactId>
          <version>${version.derby}</version>
+         <scope>runtime</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.ibm.db2</groupId>
+         <artifactId>jcc</artifactId>
+         <version>${version.db2-jcc}</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>

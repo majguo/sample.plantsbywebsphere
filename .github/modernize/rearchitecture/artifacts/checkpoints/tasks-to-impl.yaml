@@ -1,58 +1,178 @@
-taskId: t9
-role: backend
-status: completed
-planItems:
-  - 1.1
-  - 1.2
-requirements:
-  - REQ-001
-  - REQ-026
-  - REQ-027
-  - REQ-028
-artifacts:
-  - t9-backend.md
-evidence:
-  - command: "$env:JAVA_HOME=...microsoft17-jdk...; mvn -DskipTests package"
-    result: passed
-  - command: "$env:JAVA_HOME=...microsoft17-jdk...; java -jar target\\io.openliberty.sample.daytrader8.war --server.port=19080"
-    result: passed
----
-taskId: t13
-role: backend
-status: completed
-planItems:
-  - 5.1
-  - 5.2
-requirements:
-  - REQ-018
-  - REQ-019
-  - REQ-020
-  - REQ-021
-  - REQ-029
-artifacts:
-  - t13-backend.md
-evidence:
-  - command: "$env:JAVA_HOME=...microsoft17-jdk...; & \"C:\\Users\\jiangma\\Downloads\\apache-maven-3.9.11\\bin\\mvn.cmd\" -Dtest=TradeConfigControllerTest,TradeScenarioControllerTest test"
-    result: passed
----
-taskId: t12
-role: backend
-status: completed
-planItems:
-  - 4.1
-  - 4.2
-requirements:
-  - REQ-007
-  - REQ-008
-  - REQ-009
-  - REQ-010
-  - REQ-016
-  - REQ-017
-  - REQ-029
-artifacts:
-  - t12-backend.md
-evidence:
-  - command: "cmd /d /c \"set JAVA_HOME=%USERPROFILE%\\scoop\\apps\\microsoft17-jdk\\current&& set PATH=%JAVA_HOME%\\bin;%PATH%&& mvn -Dtest=TradeAppCompatibilityControllerTest test\""
-    result: passed
-  - command: "VS Code diagnostics: TradeAppCompatibilityController.java, TradeAppCompatibilityControllerTest.java"
-    result: passed
+meta:
+  generated_by: "t22.5-teamlead"
+  generated_at: "2026-05-28T10:40:12.8950165Z"
+  checkpoint_type: "aggregate-implementation-completeness"
+  source_plan: "artifacts/t7-teamlead-plan.md"
+  notes:
+    - "Plan-mapped implementation tasks cover t9 through t16."
+    - "Supplemental validation tasks capture remediation and authoritative review evidence through t21.5."
+
+plan_tasks:
+  - taskId: t9
+    role: backend
+    status: completed
+    planItems: ["1.1", "1.2"]
+    requirements: ["REQ-001", "REQ-026", "REQ-027", "REQ-028"]
+    artifacts: ["artifacts/t9-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t10
+    role: backend
+    status: completed
+    planItems: ["2.1", "2.2"]
+    requirements: ["REQ-003", "REQ-007", "REQ-009", "REQ-018", "REQ-019", "REQ-022", "REQ-029", "REQ-030"]
+    artifacts: ["artifacts/t10-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t11
+    role: backend
+    status: completed
+    planItems: ["3.1", "3.2"]
+    requirements: ["REQ-002", "REQ-004", "REQ-005", "REQ-006", "REQ-011", "REQ-012", "REQ-013", "REQ-014", "REQ-015", "REQ-029", "REQ-030"]
+    artifacts: ["artifacts/t11-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t12
+    role: backend
+    status: completed
+    planItems: ["4.1", "4.2"]
+    requirements: ["REQ-006", "REQ-007", "REQ-008", "REQ-009", "REQ-010", "REQ-016", "REQ-017", "REQ-029"]
+    artifacts: ["artifacts/t12-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t13
+    role: backend
+    status: completed
+    planItems: ["5.1", "5.2"]
+    requirements: ["REQ-018", "REQ-019", "REQ-020", "REQ-021", "REQ-029"]
+    artifacts: ["artifacts/t13-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t14
+    role: backend
+    status: completed
+    planItems: ["6.1", "6.2"]
+    requirements: ["REQ-016", "REQ-017", "REQ-022", "REQ-023", "REQ-024", "REQ-029"]
+    artifacts: ["artifacts/t14-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t15
+    role: backend
+    status: completed
+    planItems: ["7.1", "7.2"]
+    requirements: ["REQ-001", "REQ-025", "REQ-026", "REQ-027", "REQ-028", "REQ-029", "REQ-030"]
+    artifacts: ["artifacts/t15-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t16
+    role: tester
+    status: completed
+    planItems: ["8.1", "8.2"]
+    requirements: ["REQ-002", "REQ-003", "REQ-004", "REQ-005", "REQ-006", "REQ-007", "REQ-008", "REQ-009", "REQ-010", "REQ-011", "REQ-012", "REQ-013", "REQ-014", "REQ-015", "REQ-016", "REQ-017", "REQ-018", "REQ-019", "REQ-020", "REQ-021", "REQ-022", "REQ-023", "REQ-024", "REQ-025", "REQ-026", "REQ-027", "REQ-028", "REQ-029", "REQ-030"]
+    artifacts: ["artifacts/t16-tester.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+
+supplemental_validation_tasks:
+  - taskId: t16.1
+    role: backend
+    status: completed
+    supports: ["6.2", "8.2"]
+    artifacts: ["artifacts/t16.1-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t17.1
+    role: backend
+    status: completed
+    supports: ["2.1", "2.2", "3.1", "6.1", "6.2"]
+    artifacts: ["artifacts/t17.1-backend.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t17.2
+    role: architect
+    status: completed
+    supports: ["architecture-review"]
+    artifacts: ["artifacts/t17.2-architect.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t18.1
+    role: security
+    status: completed
+    supports: ["security-review"]
+    artifacts: ["artifacts/t18.1-security.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t19.1
+    role: architect
+    status: completed
+    supports: ["build-startup-smoke"]
+    artifacts: ["artifacts/t19.1-architect.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t20
+    role: tester
+    status: completed
+    supports: ["integration", "streaming", "browser-parity"]
+    artifacts: ["artifacts/t20-tester.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t20.5
+    role: tester
+    status: completed
+    supports: ["db2-primary-infra", "integration", "browser-parity"]
+    artifacts: ["artifacts/t20.5-tester.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t21.2.2
+    role: tester
+    status: completed
+    supports: ["db2-primary-infra", "primitive-jaxrs", "operator-actions", "scenario-actions"]
+    artifacts: ["artifacts/t21.2.2-tester.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t21.4.2
+    role: tester
+    status: completed
+    supports: ["db2-primary-infra", "docs-surfaces", "primitive-launchers", "alternate-surfaces", "image-surfaces"]
+    artifacts: ["artifacts/t21.4.2-tester.md"]
+    validation:
+      artifact_present: true
+      test_results_present: true
+  - taskId: t21.5
+    role: pm
+    status: completed
+    supports: ["product-parity-signoff"]
+    artifacts: ["artifacts/t21.5-pm.md"]
+    validation:
+      artifact_present: true
+      test_results_present: false
+
+validation:
+  structurally_complete: true
+  passed: true
+  expected_plan_task_ids: ["t9", "t10", "t11", "t12", "t13", "t14", "t15", "t16"]
+  present_plan_task_ids: ["t9", "t10", "t11", "t12", "t13", "t14", "t15", "t16"]
+  plan_task_artifacts_missing: []
+  plan_task_test_results_missing: []
+  supplemental_task_ids: ["t16.1", "t17.1", "t17.2", "t18.1", "t19.1", "t20", "t20.5", "t21.2.2", "t21.4.2", "t21.5"]
+  supplemental_artifacts_missing: []
+  supplemental_test_results_missing: []
+  blocking_findings: []
+  warnings:
+    - "t18.1-security.md keeps Derby 10.14.2.0 below Hibernate's supported minimum and notes the absence of a usable OWASP Dependency-Check report."

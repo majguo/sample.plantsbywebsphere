@@ -1,5 +1,12 @@
 package com.ibm.websphere.samples.daytrader.web.mvc;
 
+import java.util.function.Predicate;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -19,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.ibm.websphere.samples.daytrader.config.RuntimeSettingsService;
+import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.impl.direct.TradeDirectDBUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,11 +43,18 @@ class TradeConfigControllerTest {
     private final CompatibilitySessionFacade sessionFacade = new CompatibilitySessionFacade();
 
     private MockMvc mockMvc() {
+        return mockMvc(request -> false);
+        }
+
+    private MockMvc mockMvc(Predicate<HttpServletRequest> anonymousAllowance) {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/");
         viewResolver.setSuffix(".jsp");
         return MockMvcBuilders.standaloneSetup(new TradeConfigController(runtimeSettings, dbUtils))
-                .addInterceptors(new CompatibilitySessionAccessInterceptor(sessionFacade, SessionAccessRequirement.OPERATOR))
+            .addInterceptors(new CompatibilitySessionAccessInterceptor(
+                sessionFacade,
+                SessionAccessRequirement.OPERATOR,
+                anonymousAllowance::test))
                 .setViewResolvers(viewResolver)
                 .build();
     }
@@ -131,7 +146,59 @@ class TradeConfigControllerTest {
                 .andExpect(view().name("config"))
                 .andExpect(model().attribute("status", "DayTrader Database Built - 15000users createdCurrent DayTrader Configuration:"));
 
-        verify(dbUtils).buildDB(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.isNull());
+        verify(dbUtils).buildDB(any(), isNull());
         verify(runtimeSettings).getMaxUsers();
+    }
+
+    @Test
+    void allowsAnonymousBuildDbWhileCanonicalSeedDataIsMissing() throws Exception {
+        MockMvc mockMvc = mockMvc(request -> "buildDB".equals(request.getParameter("action")));
+        when(runtimeSettings.getMaxUsers()).thenReturn(15000);
+
+        mockMvc.perform(get("/config").param("action", "buildDB"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("config"))
+                .andExpect(model().attribute("status", "DayTrader Database Built - 15000users createdCurrent DayTrader Configuration:"));
+
+        verify(dbUtils).buildDB(any(), isNull());
+        verify(runtimeSettings).getMaxUsers();
+    }
+
+    @Test
+    void rejectsAnonymousBuildDbAfterCanonicalSeedDataExists() throws Exception {
+        MockMvc mockMvc = mockMvc();
+
+        mockMvc.perform(get("/config").param("action", "buildDB"))
+                .andExpect(status().isUnauthorized());
+
+        verifyNoInteractions(runtimeSettings, dbUtils);
+    }
+
+    @Test
+    void resetTradeRendersTheRunStatsSurfaceForTheOperator() throws Exception {
+        MockMvc mockMvc = mockMvc();
+        RunStatsDataBean runStatsData = new RunStatsDataBean();
+        when(dbUtils.resetTrade(false)).thenReturn(runStatsData);
+
+        mockMvc.perform(get("/config").session(operatorSession()).param("action", "resetTrade"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("runStats"))
+                .andExpect(model().attribute("runStatsData", runStatsData))
+                .andExpect(model().attribute("status", "Trade Reset completed successfully"));
+
+        verify(dbUtils).resetTrade(false);
+    }
+
+    @Test
+    void buildDbTablesAllowsTheOperatorSessionAndReRendersConfig() throws Exception {
+        MockMvc mockMvc = mockMvc();
+
+        when(dbUtils.checkDBProductName()).thenReturn("DB2/");
+
+        mockMvc.perform(get("/config").session(operatorSession()).param("action", "buildDBTables"))
+                .andExpect(status().isOk());
+
+        verify(dbUtils).checkDBProductName();
+        verify(dbUtils, org.mockito.Mockito.never()).buildDB(any(), notNull());
     }
 }

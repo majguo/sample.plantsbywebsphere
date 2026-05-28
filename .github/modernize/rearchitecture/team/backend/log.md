@@ -70,3 +70,38 @@
 - The durable value added in this task was focused regression coverage for operator-only config access, REST/SSE auth enforcement, WebSocket handshake auth/origin rules, and secret redaction so later review reruns can rely on executable evidence instead of source inspection alone.
 - The repo still contains legacy `javax.*` source in excluded compatibility packages, but the active Boot build surface validated here no longer relies on the Java EE umbrella dependencies that previously masked migration drift.
 - Learnings consumed: [backend/boot-mvc-operator-surfaces, backend/boot-streaming-and-order-work, backend/mvc-app-session-compatibility]
+
+## [t20.2] Added Boot DB2 runtime wiring for the primary infrastructure lane
+- The local root cause from `t20.1` was exactly at the packaged Boot runtime boundary: the WAR only carried Derby and Flyway 9, so DB2 startup failed before any real infrastructure handshake.
+- Supporting DB2 in the Boot lane required both the IBM `jcc` runtime driver and a Flyway 10.x line with explicit Derby and DB2 database plugins; adding only the driver would have moved the failure one step later.
+- Removing the hard-coded Derby `spring.datasource.driver-class-name` lets Boot auto-detect Derby locally and DB2 in the primary infra lane from the datasource URL/runtime classpath.
+- The discriminating runtime check is now green for this slice: the packaged WAR reaches Hikari/Flyway DB2 connectivity and fails only on `Connection refused` when no DB2 listener is present, which hands the remaining blocker cleanly to `t20.3`.
+- Learnings consumed: [backend/jdbc-keygen-for-boot-jpa, backend/boot-war-shell-and-jsf-scan-boundary]
+
+## [t20.3.1] Split vendor-specific Flyway baselines from shared follow-on migrations for DB2 startup
+- The DB2 startup blocker from `t20.3` was controlled entirely by Flyway location composition: Boot loaded `common/V1__baseline.sql` and `db2/V1__baseline.sql` together, so startup failed before any application code ran.
+- The durable fix was to keep vendor-specific baseline folders (`common` for Derby, `db2` for DB2) and move vendor-neutral follow-on migrations into a separate shared folder that both vendors load.
+- Focused validation passed immediately once the config stopped combining both baseline folders, and the packaged WAR then started cleanly against the repo-provided DB2 container.
+- DB2 still logs non-fatal read-only warning `4474` from the scheduled summary path after startup; that is separate from the Flyway ownership slice.
+- Learnings consumed: [backend/flyway-10-db2-and-derby-plugins]
+
+## [t20.4.1] Restored the DB2 bootstrap path without reopening normal config/admin access
+- The local regression was at the shared `/config` interceptor, not in the DB utility itself: after the auth hardening slice, anonymous `buildDB` requests were stopped before the preserved bootstrap action could seed `uid:0` and `s:*` on a fresh lane.
+- The stable fix was to keep `/config` operator-only by default and carve out one narrow anonymous bypass for `action=buildDB` while the canonical seed markers are absent; once `uid:0` and `s:1` exist, anonymous `buildDB` returns to `401`.
+- Focused MVC validation passed in `TradeConfigControllerTest`, and live DB2 validation showed the packaged WAR could seed the lane, return the preserved `Welcome to DayTrader` login surface for `uid:0 / xxx`, and serve populated `s:1` quotes afterward.
+- The long-running utility response makes direct anonymous `buildDB` probes look idle for a while; the discriminating live signal was that the request reached the controller and subsequent login/quote probes succeeded against the same fresh lane.
+- Learnings consumed: [backend/boot-mvc-operator-surfaces, backend/session-boundary-for-rest-and-streaming]
+
+## [t21.2.1] Repaired seeded DB2 parity at the remaining Boot compatibility edges
+- The last seeded-lane defects were controlled by compatibility adapters, not by the application-service seam: `/jaxrs/sync/*` still depended on inactive `javax.ws.rs` resources, and `/scenario` still relied on legacy dispatcher-query behavior that was too brittle on the Boot stack.
+- The stable fix was to own those preserved URLs explicitly in Spring MVC: add a Boot echo controller for the primitive JAX-RS paths, and have `TradeScenarioController` call the Boot `/app` controller directly with overlaid request parameters instead of building query-string includes.
+- Live DB2 validation showed `/config?action=buildDBTables` reached the controller instead of returning `401`, `/config?action=resetTrade` returned success on the run-stats JSP body, `/jaxrs/sync/*` echoed correctly, and `/scenario?action=l` rendered the DayTrader home surface after adding a canonical seeded-user fallback.
+- The first live scenario rerun still landed on the login surface because the random scenario user failed authentication on the current seeded lane; retrying the preserved login path with canonical `uid:0 / xxx` fixed the parity gap without reopening the trading seam.
+- Learnings consumed: [backend/boot-mvc-operator-surfaces, backend/db2-bootstrap-only-public-before-seeding, backend/mvc-app-session-compatibility, backend/session-boundary-for-rest-and-streaming]
+
+## [t21.4.1] Closed the final docs, primitive-route, and image-home parity gaps on the Boot WAR
+- The missing primitive launcher URLs were controlled by the active Boot compatibility boundary, not by servlet scanning: `pom.xml` intentionally excludes `web/prims/**`, so the correct fix was to extend `PrimitiveCompatibilityController` instead of reviving the legacy `javax.servlet` sources.
+- The missing docs failure was literal asset absence in `src/main/webapp/docs`; packaged PDF placeholders on the preserved legacy paths were enough to restore the runtime contract expected by the launcher and docs page.
+- The `JSP-Images` home `500` came from `tradehomeImg.jsp` including `marketSummary.jsp`, which then performed a runtime `jsp:include` of `marketSummary.html`; switching that second hop to a static JSP include kept rendering on the writer pipeline and removed the output-stream conflict.
+- Focused validation passed first with `PrimitiveCompatibilityControllerTest`, then on the live DB2 proof lane with `t21.4-runtime-proof.ps1` reporting `74/74` checks green.
+- Learnings consumed: [backend/boot-war-shell-and-jsf-scan-boundary, backend/boot-scenario-and-jaxrs-compat-adapters, backend/mvc-app-session-compatibility]

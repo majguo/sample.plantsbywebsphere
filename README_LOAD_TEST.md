@@ -1,6 +1,30 @@
 # Daytrader8: Load Testing
 This readme explains how to setup DB2 and load test the Daytrader 8 application with Open Liberty.
 
+## Spring Boot 3 primary infra lane
+
+For the migrated Spring Boot 3 runtime, the repo now carries a reproducible local DB2 lane based on
+the IBM Db2 Community container image instead of the legacy Liberty image flow.
+
+1. Start the DB2 container lane:
+```
+pwsh ./scripts/start-db2-primary-lane.ps1
+```
+2. Apply the generated runtime variables to the current shell and start the packaged WAR:
+```
+. ./target/daytrader-db2-app-env.ps1
+$env:JAVA_HOME = "$env:USERPROFILE\scoop\apps\microsoft17-jdk\current"
+$env:Path = "$env:JAVA_HOME\bin;" + $env:Path
+java -jar target\io.openliberty.sample.daytrader8.war --server.port=19095
+```
+3. Tear the DB2 lane down when finished:
+```
+pwsh ./scripts/stop-db2-primary-lane.ps1
+```
+
+The first DB2 start writes `target/daytrader-db2.env` with a generated local password and writes
+`target/daytrader-db2-app-env.ps1` with the matching Spring datasource variables.
+
 ## Prerequisites
 
 1. Open Liberty Machine (Server with Open Liberty unzipped at <OPENLIBERTY_HOME>, and a default profile created)
