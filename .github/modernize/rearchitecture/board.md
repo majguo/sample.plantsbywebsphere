@@ -62,7 +62,7 @@
 - ✅ t20.4.1 [backend] Restore DB2 bootstrap and seed-data path for canonical login and quote flows (2026-05-28T07:49:30Z→2026-05-28T08:04:53Z, 15m 23s) [deps: t20.4]
 - ✅ t20.5 [tester] Re-run DB2 primary infra lane after bootstrap fix (2026-05-28T08:05:40Z→2026-05-28T08:21:50Z, 16m 10s) [deps: t20.4.1]
 
-### Phase: Conformance
+### Phase: Conformance 📌 c92265b
 - ✅ t21 [pm] Feature parity sign-off: verify requirements checklist completion (2026-05-28T06:48:43Z→2026-05-28T06:54:04Z, 5m 21s) [deps: t20]
 - ✅ t22 [teamlead] Conformance review: verify test coverage and quality gates (2026-05-28T06:48:43Z→2026-05-28T06:57:46Z, 9m 03s) [deps: t20]
 - ✅ t21.1 [pm] Re-run feature parity sign-off after evidence closure (2026-05-28T08:23:08Z→2026-05-28T08:26:37Z, 3m 29s) [deps: t20.5]
